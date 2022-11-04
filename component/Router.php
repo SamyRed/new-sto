@@ -48,7 +48,6 @@ class Router {
                 
                 $segments = explode('/', $internalRoute);
                 
-                
                 $controllerName = ucfirst(array_shift($segments)) . 'Controller';
                 $actionName = 'action' . ucfirst(array_shift($segments));
                 $parameters = $segments;

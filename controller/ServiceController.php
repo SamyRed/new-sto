@@ -5,6 +5,9 @@ include 'model/MakeAjax.php';
 include 'model/Order.php';
 include 'model/Alert.php';
 include 'model/Company.php';
+include 'model/Storage.php';
+include 'model/User.php';
+include 'model/Worker.php';
 
 class ServiceController {
     

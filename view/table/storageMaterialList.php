@@ -1,7 +1,3 @@
-<?php
-$order = new Order();
-$materialList = $order->getMaterialList();
-?>
 <table class="table">
     <thead>
         <tr>
@@ -13,9 +9,9 @@ $materialList = $order->getMaterialList();
     </thead>
     <tbody class="table-striped">
 <?php
-$totalMaterialsPrice = 0;
-foreach($materialList as $material) {
-    $totalMaterialsPrice += $material['price'] * $material['amount'];
+    $totalMaterialsPrice = 0;
+    foreach($materialList as $material) {
+        $totalMaterialsPrice += $material['price'] * $material['amount'];
 ?>
         <tr>
             <td><?=$material['title']?></td>
@@ -24,7 +20,7 @@ foreach($materialList as $material) {
             <td><?=$material['price'] * $material['amount']?>{UAH}</td>
         </tr>
 <?php
-}
+    }
 ?>
         <tr>
             <td colspan="3" class="text-end">{TOTAL}:</td>

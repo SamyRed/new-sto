@@ -3,7 +3,7 @@ Order - list
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <a class="nav-link btn btn-outline-secondary load-container" data-params='{"container":"dialogContainer","content":"dialogAddOrder"}' href="#">{ADD_ORDER}</a>
+                <button type="button" class="nav-link btn btn-outline-secondary load-container" data-params='{"container":"dialogContainer","content":"dialogOrderAdd"}'>{ADD_ORDER}</button>
             </li>
           </ul>
       </div>

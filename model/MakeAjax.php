@@ -2,7 +2,7 @@
 
 class MakeAjax {
     
-    public function makeLoadContainer($params) {
+    public function makeLoadView($params) {
         
         $return = array();
         $tags = preg_split("/(?=(?<![A-Z]|^)[A-Z])/", $params['content']); 
@@ -28,7 +28,8 @@ class MakeAjax {
         
     }
     
-    public function makeSendForm($params) {
+    public function makeSendData($params) {
+        
         $return = array();
         $tags = preg_split("/(?=(?<![A-Z]|^)[A-Z])/", $params['script']);
         unset($params['script']);
@@ -38,6 +39,7 @@ class MakeAjax {
         
         $result = call_user_func_array(array($controllerObject, $methodName), array($params));
         
+        $return = json_decode($result, 1);
         $return['alert'] = Alert::get();
         
         return json_encode($return);

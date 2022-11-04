@@ -1,11 +1,11 @@
 <?php
 $order = new Order();
 ?>
-<div class="modal fade" id="dialogAddOrder" tabindex="-1" role="dialog" aria-labelledby="dialogAddOrderLabel" aria-hidden="true">
+<div class="modal fade" id="dialogStorageAdd" tabindex="-1" role="dialog" aria-labelledby="dialogStorageAddLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="dialogAddOrderLabel">{ORDER_ADDING}</h5>
+                <h5 class="modal-title" id="dialogStorageAddLabel">{STORAGE_ADDING}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="#">
@@ -17,14 +17,14 @@ foreach($order->fieldList() as $field) {
 ?>
                     <div class="input-group mb-3">
                         <label for="<?=$field['service_field_name']?>" class="input-group-text"><?=$field['field_name']?>:</label>
-                        <input type="text" class="form-control" name="<?=$field['service_field_name']?>" id="<?=$field['service_field_name']?>" placeholder="<?=$field['field_name']?>" style="width:200px">
+                        <input type="text" class="form-control" name="<?=$field['service_field_name']?>" id="<?=$field['service_field_name']?>" placeholder="<?=$field['field_name']?>">
                     </div>  
 <?php
     } else if($params['type'] == 'number') {
 ?>
                     <div class="input-group mb-3">
                         <label for="<?=$field['service_field_name']?>" class="input-group-text"><?=$field['field_name']?>:</label>
-                        <input type="number" class="form-control" name="<?=$field['service_field_name']?>" id="<?=$field['service_field_name']?>" placeholder="<?=$field['field_name']?>" style="width:200px">
+                        <input type="number" class="form-control" name="<?=$field['service_field_name']?>" id="<?=$field['service_field_name']?>" placeholder="<?=$field['field_name']?>">
                     </div>  
 <?php
     } else if($params['type'] == 'year') {
@@ -34,7 +34,7 @@ foreach($order->fieldList() as $field) {
 ?>
                     <div class="input-group mb-3">
                         <label for="<?=$field['service_field_name']?>" class="input-group-text"><?=$field['field_name']?>:</label>
-                        <select class="form-control" name="<?=$field['service_field_name']?>" id="<?=$field['service_field_name']?>" placeholder="<?=$field['field_name']?>" style="width:200px">
+                        <select class="form-control" name="<?=$field['service_field_name']?>" id="<?=$field['service_field_name']?>" placeholder="<?=$field['field_name']?>">
                             <option value="<?=$params['default']?>"><?=$params['default']?></option>
 <?php
             for($i = $params['min']; $i <= $params['max']; $i++){
@@ -59,7 +59,7 @@ foreach($order->fieldList() as $field) {
 ?>
                     <div class="input-group mb-3">
                         <label for="<?=$field['service_field_name']?>" class="input-group-text"><?=$field['field_name']?>:</label>
-                        <select class="form-control" name="<?=$field['service_field_name']?>" id="<?=$field['service_field_name']?>" placeholder="<?=$field['field_name']?>" style="width:200px">
+                        <select class="form-control" name="<?=$field['service_field_name']?>" id="<?=$field['service_field_name']?>" placeholder="<?=$field['field_name']?>">
 <?php
             foreach($params['list'] as $key => $element){
 ?>

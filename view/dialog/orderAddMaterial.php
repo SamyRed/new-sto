@@ -8,8 +8,8 @@
             <form action="#">
                 <div class="modal-body">
                     <div class="input-group mb-3">
-                        <label for="<?=$field['service_field_name']?>" class="input-group-text"><?=$field['field_name']?>:</label>
-                        <input type="text" class="form-control" name="<?=$field['service_field_name']?>" id="<?=$field['service_field_name']?>" placeholder="<?=$field['field_name']?>" style="width:200px">
+                        <label for="title" class="input-group-text">{MATERIAL_TITLE}:</label>
+                        <input type="text" class="form-control" name="title" id="title" placeholder="{MATERIAL_TITLE}">
                     </div>  
                 </div>
                 <div class="modal-footer">

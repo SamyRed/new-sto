@@ -2,9 +2,10 @@
 
 class Order {
     
+    private static $id;
+    
     private $content,
-            $fieldList;
-    public  $id,
+            $fieldList,
             $date;
     
     public function __construct() {
@@ -15,7 +16,11 @@ class Order {
     
     public function content() {
         
-        return $this->content;
+        $content = $this->content;
+        $content['date'] = $this->date;
+        $content['id'] = self::$id;
+        
+        return $content;
         
     }
     
@@ -23,7 +28,7 @@ class Order {
         
         $return = array();
         
-        if($id !==null) {
+        if($id !== null) {
             
             try{
                 
@@ -36,11 +41,11 @@ class Order {
                     
                 ));
                 
-                if($query->columnCount() !== 0) {
+                if($query->rowCount() > 0) {
                     
                     $order = $query->fetch(PDO::FETCH_ASSOC);
                     
-                    $this->id = $id;
+                    self::$id = $id;
                     $this->content = json_decode($order['content'], 1);
                     $this->date = $order['date'];
                 
@@ -60,9 +65,13 @@ class Order {
             
         } else {
             
-            if(!empty($this->id)) {
+            if(!empty(self::$id)) {
                 
-                $return = $this->id;
+                $return = self::$id;
+                
+            } else {
+                
+                $return = false;
                 
             }
             
@@ -153,8 +162,8 @@ class Order {
     }
     
     public static function add($params) {
-        var_dump($params);
         
+        $formData = $params['formData'];
         $order = new Order();
         $return = array();
         $alertList = new Alert();
@@ -163,9 +172,9 @@ class Order {
         
         foreach($order->fieldList() as $field) {
             
-            if(!empty($params['formData'][$field['service_field_name']])) {
+            if(!empty($formData[$field['service_field_name']])) {
                 
-                $paramsArr[$field['service_field_name']] = $params['formData'][$field['service_field_name']];
+                $paramsArr[$field['service_field_name']] = $formData[$field['service_field_name']];
             
             } else {
                 
@@ -207,6 +216,35 @@ class Order {
         }
         
         return $return['result'];
+        
+    }
+    
+    public function getMaterialList() {
+        
+        $return = array();
+        $order_id = self::$id;
+        
+        try{
+            
+            $db = DB::getConnection();
+            
+            $result = $db->prepare("SELECT * FROM _order_material_list WHERE order_id = :order_id");
+            $result->execute(array(
+                
+                ':order_id' => $order_id
+                
+            ));
+            $materialList = $result->fetchAll(PDO::FETCH_ASSOC);
+            
+            $return = $materialList;
+            
+        } catch(PDOException $e) {
+            
+            $return = false;
+            
+        }
+        
+        return $return;
         
     }
     
