@@ -4,7 +4,7 @@ class Alert {
     
     public static function push($type, $text) {
         
-        $alert = '<div class="alert alert-' . htmlspecialchars($type) . '">' . htmlspecialchars($text) . '</div>';
+        $alert = '<div class="alert alert-' . htmlspecialchars($type) . '">' . $text . '</div>';
         $_SESSION['alert'][] = $alert;
         
         return true;
@@ -25,8 +25,16 @@ class Alert {
     
     public static function get() {
         
-        $alertList = $_SESSION['alert'];
-        $_SESSION['alert'] = array();
+        if(!empty($_SESSION['alert'])) {
+        
+            $alertList = $_SESSION['alert'];
+            $_SESSION['alert'] = array();
+        
+        } else {
+            
+            $alertList = [];
+            
+        }
         
         return $alertList;
         

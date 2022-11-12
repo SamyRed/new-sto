@@ -10,13 +10,27 @@ class OrderController extends ServiceController {
     public function actionList($params = null) {
         
         Service::setTitle('List of orders');
+        
         $user = new User();
+        $company = new Company();
         
         include_once ROOT . '/view/header.php';
         
         if($user->get()) {
             
-        include_once ROOT . '/view/order/list.php';
+            if($companyArr = $company->get()) {
+            
+                include_once ROOT . '/view/order/list.php';
+                
+            } else {
+            
+                include_once ROOT . '/view/dialog/companyAdd.php';
+                echo "
+<script>$(window).on('load', function(){
+$('#dialogCompanyAdd').modal('show');
+});</script>";
+            
+            }
         
         } else {
             
@@ -35,17 +49,23 @@ $('#dialogLogIn').modal('show');
     public function actionView($params = null) {
         
         Service::setTitle('View order');
+        
         $user = new User();
-        $orderObj = new Order();
-        $orderObj->id($params[1]);
-        $order = $orderObj->content();
+        $company = new Company();
+        $order = new Order();
+        $order->set($params[1]);
+        $orderArr = $order->get();
         
         include_once ROOT . '/view/header.php';
         
-        if($user->get()) {
+        if($userArr = $user->get()) {
             
-            $subPage = $params[0];
-            include_once ROOT . '/view/order/view.php';
+            if($companyArr = $company->get()) {
+            
+                $subPage = $params[0];
+                include_once ROOT . '/view/order/view.php';
+
+            }
         
         } else {
             

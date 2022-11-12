@@ -20,6 +20,16 @@ function alertShow(alertList) {
     
 }
 
+$(function() {
+    
+    $(document).on("click", ".dropdown-selected", function() {
+        
+        $(this).closest(".dropdown").children("a").html($(this).html());
+        
+    });
+    
+});
+
 /**
  * Close alert if click on it
  */
@@ -95,12 +105,12 @@ $(function() {
                         data: {'action': 'route', 'uri': uri},
                         success: function(result){
 
-                            alertShow(result['alert']);
-
                             window.history.replaceState('', '', (window.location.origin + '/' + uri));
                             var newDoc = document.open("text/html", "replace");
                             newDoc.write(result.html);
                             newDoc.close();
+
+                            alertShow(result['alert']);
 
                         },
                         error: function(result){
@@ -166,13 +176,19 @@ $(function() {
 
         }
         
+        if(dataParams.hasOwnProperty('params')) {
+
+            var params = dataParams.params;
+
+        }
+        
         var content = dataParams.content;
         
         $.ajax({
             url: '/ajax',
             method: 'post',
             dataType: 'json',
-            data: {'action': 'loadView', 'content': content},
+            data: {'action': 'loadView', 'content': content, 'params': params},
             success: function(result){
                 
                 alertShow(result['alert']);
@@ -303,4 +319,36 @@ $(function() {
         
     }));
     
+});
+
+/*
+ * Додавання правила доступу до складу
+ */
+$(function() {
+    $(document).on('click', '#storageAccessRules button', (function() {
+        var elem = $(this);
+        var type = elem.data('type');
+        var select = elem.parent().children('select');
+        var selectedId = select.val();
+        var selectedText = select.find('option:selected').text()
+        var container = elem.closest(".col").children('.choosen');
+
+        if (!container.find('input[value="'+selectedId+'"]').length && selectedId != 0) {
+            container.append(
+                '<div><input type="hidden" value="' + selectedId + '" name="permitted-' + type + '[]"/><p>'+
+                '<img src="/template/images/close.png" width="24px" height="24px" class="access-rule-delete"/>' + selectedText +
+                '</p></div>'
+            );
+        }
+
+    }));
+});
+
+/*
+ * Видалення правила доступу до складу
+ */
+$(function() {
+    $(document).on("click", ".access-rule-delete", (function() {
+        $(this).parent().parent().remove();
+    }));
 });

@@ -1,5 +1,8 @@
 <?php
-$order = new Order();
+$worker = new Worker();
+$position = new Position();
+$workerListArr = $worker->getList();
+$positionListArr = $position->getList();
 ?>
 <div class="modal fade" id="dialogStorageAdd" tabindex="-1" role="dialog" aria-labelledby="dialogStorageAddLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -10,73 +13,67 @@ $order = new Order();
             </div>
             <form action="#">
                 <div class="modal-body">
-<?php
-foreach($order->fieldList() as $field) {
-    $params = json_decode($field['parameters'], 1);
-    if($params['type'] == 'text') {
-?>
                     <div class="input-group mb-3">
-                        <label for="<?=$field['service_field_name']?>" class="input-group-text"><?=$field['field_name']?>:</label>
-                        <input type="text" class="form-control" name="<?=$field['service_field_name']?>" id="<?=$field['service_field_name']?>" placeholder="<?=$field['field_name']?>">
-                    </div>  
-<?php
-    } else if($params['type'] == 'number') {
-?>
+                        <label for="title" class="input-group-text">{TITLE}:</label>
+                        <input type="text" class="form-control" name="title" id="title" placeholder="{TITLE}">
+                    </div>
                     <div class="input-group mb-3">
-                        <label for="<?=$field['service_field_name']?>" class="input-group-text"><?=$field['field_name']?>:</label>
-                        <input type="number" class="form-control" name="<?=$field['service_field_name']?>" id="<?=$field['service_field_name']?>" placeholder="<?=$field['field_name']?>">
-                    </div>  
-<?php
-    } else if($params['type'] == 'year') {
-        if($params['max'] == 'NOW') {
-            $params['max'] = date('Y');
-        }
+                        <label for="description" class="input-group-text">{DESCRIPTION}:</label>
+                        <input type="text" class="form-control" name="description" id="description" placeholder="{DESCRIPTION}">
+                    </div>
+                    <div class="container card card-body" id="storageAccessRules">
+                        <div class="row">
+                            <h5>{WHO_HAVE_BEEN_ACCESS_TO_THIS_STORAGE}:</h5>
+                            <div class="col">
+<?php 
+if($workerListArr) {
 ?>
-                    <div class="input-group mb-3">
-                        <label for="<?=$field['service_field_name']?>" class="input-group-text"><?=$field['field_name']?>:</label>
-                        <select class="form-control" name="<?=$field['service_field_name']?>" id="<?=$field['service_field_name']?>" placeholder="<?=$field['field_name']?>">
-                            <option value="<?=$params['default']?>"><?=$params['default']?></option>
+                                <div class="input-group mb-3">
+                                    <label class="input-group-text">{WORKER}:</label>
+                                    <select class="form-select">
 <?php
-            for($i = $params['min']; $i <= $params['max']; $i++){
-                if($i == $params['default']) {
-                    
-                    $selected = ' selected';
-                    
-                } else {
-                    
-                    $selected = '';
-                    
-                }
+    foreach ($workerListArr as $workerArr) {
 ?>
-                            <option <?=$selected?> value="<?=$i?>"><?=$i?></option>
-<?php
-            }
-?>
-                        </select>
-                    </div>  
-<?php
-    } else if($params['type'] == 'select') {
-?>
-                    <div class="input-group mb-3">
-                        <label for="<?=$field['service_field_name']?>" class="input-group-text"><?=$field['field_name']?>:</label>
-                        <select class="form-control" name="<?=$field['service_field_name']?>" id="<?=$field['service_field_name']?>" placeholder="<?=$field['field_name']?>">
-<?php
-            foreach($params['list'] as $key => $element){
-?>
-                            <option value="<?=$element?>"><?=$element?></option>
-<?php
-            }
-?>
-                        </select>
-                    </div>  
+                                        <option value="<?=$workerArr['id']?>"><?=$workerArr['name']?></option>
 <?php
     }
+?>
+                                    </select>
+                                    <button class="btn btn-outline-secondary" data-type="worker" type="button">{ADD}</button>
+                                </div>
+                                <div class="choosen"></div>
+<?php
 }
 ?>
+                            </div>
+                            <div class="col">
+<?php 
+if($positionListArr) {
+?>
+                                <div class="input-group mb-3">
+                                    <label class="input-group-text">{POSITION}:</label>
+                                    <select class="form-select">
+<?php
+    foreach ($positionListArr as $positionArr) {
+?>
+                                        <option value="<?=$positionArr['id']?>"><?=$positionArr['title']?></option>
+<?php
+    }
+?>
+                                    </select>
+                                    <button class="btn btn-outline-secondary" data-type="position" type="button">{ADD}</button>
+                                </div>
+                                <div class="choosen"></div>
+<?php
+}
+?>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-outline-secondary send-form load-container" data-params='{"container": "orderListContainer", "action": "orderAdd", "content":"tableOrderList"}' type="button" name="save">{SAVE}</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{CLOSE}</button>
+                    <button type="button" class="btn btn-outline-secondary send-form load-container" data-params='{"action": "storageAdd", "container": "warpper", "content": "storageView"}' type="button" name="save">{SAVE}</button>
                 </div>
             </form>
         </div>

@@ -9,15 +9,18 @@
     </thead>
     <tbody class="table-striped">
 <?php
+$storage = new Storage();
+$materialListArr = $storage->getMaterialList();
+if($materialListArr) {
     $totalMaterialsPrice = 0;
-    foreach($materialList as $material) {
-        $totalMaterialsPrice += $material['price'] * $material['amount'];
+    foreach($materialListArr as $materialArr) {
+        $totalMaterialsPrice += $materialArr['sum'];
 ?>
         <tr>
-            <td><?=$material['title']?></td>
-            <td><?=$material['amount']?> <?=$material['unit']?></td>
-            <td><?=$material['price']?>/<?=$material['unit']?></td>
-            <td><?=$material['price'] * $material['amount']?>{UAH}</td>
+            <td><?=$materialArr['title']?></td>
+            <td><?=$materialArr['amount']?> <?=$materialArr['unit']?></td>
+            <td><?=$materialArr['price']?>/<?=$materialArr['unit']?></td>
+            <td><?=$materialArr['sum']?>{UAH}</td>
         </tr>
 <?php
     }
@@ -26,5 +29,8 @@
             <td colspan="3" class="text-end">{TOTAL}:</td>
             <td><b><?=$totalMaterialsPrice?>{UAH}</b></td>
         </tr>
+<?php
+}
+?>
     </tbody>
 </table>

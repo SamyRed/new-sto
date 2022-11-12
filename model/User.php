@@ -16,27 +16,25 @@ class User {
     
     public function get(int $id = null) {
         
-        $return = array();
-        
         if($id !== null) {
             
-            $user_id = $id;
+            $userId = $id;
             
         } else {
         
             if(!empty($_SESSION['user_id'])) {
 
-                $user_id = $_SESSION['user_id'];
+                $userId = $_SESSION['user_id'];
                 
             } else {
                 
-                $user_id = null;
+                $userId = null;
                 
             }
             
         }
         
-        if($user_id !== null) {
+        if($userId !== null) {
 
             try {
 
@@ -45,7 +43,7 @@ class User {
                 $query = $db->prepare("SELECT * FROM _user WHERE id = :id");
                 $query->execute(array(
 
-                    ':id' => $user_id
+                    ':id' => $userId
 
                 ));
 
@@ -54,6 +52,7 @@ class User {
 
             } catch(PDOException $e) {
 
+                $alertList::push('danger', '<b>PDO Error!</b>' . htmlspecialchars($e));
                 $return = false;
 
             }
@@ -69,8 +68,6 @@ class User {
     }
     
     public function set(int $id) {
-        
-        $return = array();
         
         try {
             
@@ -166,7 +163,7 @@ class User {
             
         }
 
-        return json_encode($return);
+        return $return;
         
     }
     

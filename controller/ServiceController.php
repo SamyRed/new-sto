@@ -8,6 +8,7 @@ include 'model/Company.php';
 include 'model/Storage.php';
 include 'model/User.php';
 include 'model/Worker.php';
+include 'model/Position.php';
 
 class ServiceController {
     

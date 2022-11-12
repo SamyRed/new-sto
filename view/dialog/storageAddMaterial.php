@@ -35,7 +35,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{CLOSE}</button>
-                    <button type="button" class="btn btn-outline-secondary send-form" data-params='{"action": "storageAddMaterial"}' type="button" name="save">{ADD}</button>
+                    <button type="button" class="btn btn-outline-secondary send-form" data-params='{"action": "storageAddMaterial", "container": "materialListConteiner", "content": "tableStorageMaterialList"}' type="button" name="save">{ADD}</button>
                 </div>
             </form>
         </div>
@@ -51,7 +51,7 @@ $( function() {
                 url: '/ajax',
                 method: 'post',
                 dataType: 'json',
-                data: {'action': 'sendData', 'script': 'storageGetMaterialListJSON', 'keyword': request.term},
+                data: {'action': 'sendData', 'script': 'storageGetMaterialListByKeyword', 'keyword': request.term},
                 success: function(result) {
                 
                     alertShow(result['alert']);

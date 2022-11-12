@@ -63,3 +63,7 @@
 .ui-widget-content {
     z-index: 9999!important;
 }
+
+.cursor-pointer {
+    cursor: pointer!important;
+}

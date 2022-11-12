@@ -6,17 +6,180 @@ class Company {
     
     public function __construct() {
         
-        if(!empty($_COOKIE['company_id'])) {
-            
-            $this->id = (int)$_COOKIE['company_id'];
-            
-        }
+        
         
     }
     
-    public function id() {
+    public function get(int $id = null) {
         
-        return $this->id;
+        $alertList = new Alert();
+        $user = new User();
+        
+        if($id !== null) {
+            
+            $companyId = $id;
+            
+        } else {
+        
+            if(!empty($_SESSION['company_id'])) {
+
+                $companyId = $_SESSION['company_id'];
+                
+            } else {
+                
+                $companyId = null;
+                
+            }
+            
+        }
+        
+        if($companyId !== null) {
+            
+            try {
+                
+                $db = DB::getConnection();
+                $result = $db->prepare("SELECT * FROM _company WHERE id = :id");
+                $result->execute(array(
+                    
+                    ':id' => $companyId
+                    
+                ));
+                
+                if($result->rowCount() > 0) {
+                    
+                    $companyArr = $result->fetch(PDO::FETCH_ASSOC);
+                    $return = $companyArr;
+                    
+                } else {
+                    
+                    $return = false;
+                    
+                }
+                
+            } catch(PDOException $e) {
+                
+                $return = false;
+                $alertList::push('danger', '<b>PDO Error!</b>' . htmlspecialchars($e));
+                
+            }
+            
+        } else {
+            
+            try {
+                
+                if($userArr = $user->get()) {
+                    
+                    $db = DB::getConnection();
+                    $result = $db->prepare("SELECT * FROM _company WHERE user_id = :userId OR JSON_CONTAINS(access_users, :userId, '$')");
+                    $result->execute(array(
+
+                        ':userId' => $userArr['id']
+
+                    ));
+
+                    if($result->rowCount() > 0) {
+
+                        $companyArr = $result->fetch(PDO::FETCH_ASSOC);
+                        $this->set($companyArr['id']);
+                        $return = $companyArr;
+
+                    } else {
+
+                        $return = false;
+
+                    }
+                    
+                } else {
+                    
+                    $return = false;
+                    
+                }
+                
+            } catch(PDOException $e) {
+                
+                $return = false;
+                $alertList::push('danger', '<b>PDO Error!</b>' . htmlspecialchars($e));
+                
+            }
+            
+        }
+        
+        return $return;
+        
+    }
+    
+    public function set(int $id) {
+        
+        try {
+            
+            $db = DB::getConnection();
+            
+            $query = $db->prepare("SELECT count(*) FROM _company WHERE id = :id");
+            $query->execute(array(
+                
+                ':id' => $id
+                
+            ));
+            
+            if($query->rowCount() > 0) {
+                
+                $_SESSION['company_id'] = $id;
+                $return = true;
+                
+            } else {
+                
+                $return = false;
+                
+            }
+            
+        } catch(PDOException $e) {
+            
+            $return = false;
+            
+        }
+        
+        return $return;
+        
+    }
+    
+    public function add($params) {
+        
+        $return = array();
+        $alertList = new Alert();
+        $user = new User();
+        $company = new Company();
+        $formData = $params['formData'];
+        
+        if($userArr = $user->get()) {
+        
+            try {
+
+                $db = DB::getConnection();
+                $result = $db->prepare("INSERT INTO _company VALUES(NULL, NOW(), :title, :userId, '{}')");
+                $result->execute(array(
+
+                    ':title' => $formData['title'],
+                    ':userId' => $userArr['id']
+
+                ));
+                
+                $alertList->push('success', '{COMPANY} <b>' . $formData['title'] . '</b> {CREATED}');
+                $company->set($db->lastInsertId());
+                $return['reload'] = true;
+
+            } catch(PDOException $e) {
+
+                $alertList->push('danger', '<b>PDO Error!</b>' . htmlspecialchars($e));
+
+            }
+            
+        } else {
+            
+            $alertList->push('danger', '{NOT_AUTORIZED}');
+            
+        }
+        
+        return json_encode($return);
         
     }
     

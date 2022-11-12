@@ -1,4 +1,3 @@
-Order - list
 <nav class="navbar navbar-expand-lg navbar-light bg-light p-2">
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
@@ -9,5 +8,7 @@ Order - list
       </div>
 </nav>
 <div id="orderListContainer">
-<?=include ROOT . '/view/table/orderList.php'?>
+<?php
+    include ROOT . '/view/table/orderList.php';
+?>
 </div>

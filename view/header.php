@@ -1,3 +1,9 @@
+<?php
+$company = new Company();
+$companyArr = $company->get();
+$user = new User();
+$userArr = $user->get();
+?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -10,7 +16,8 @@
         
         <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
         <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
         <script src="/js/script.js" type="text/javascript"></script>
         
         <title><?=Service::getTitle()?></title>
@@ -18,8 +25,7 @@
     <body>
         <div style="background: #d5e5eb">
 <?php
-var_dump('COOKIE: ', $_COOKIE, '<br>');
-var_dump('SESSION: ', $_SESSION);
+htmlspecialchars(var_dump('SESSION: ', $_SESSION));
 ?>
         </div>
         <div id="alertContainer">
@@ -41,13 +47,18 @@ Alert::show();
                     </ul>
                     <div class="d-flex">
 <?php
-if(!$user->get()) {
+if($companyArr) {
 ?>
-                        <button type="button" class="btn btn-dark load-container" data-params='{"container":"dialogContainer","content":"dialogLogIn"}'>{LOG_IN}</button>
+                        <button type="button" class="btn btn-primary load-page" data-params='{"uri":"company/<?=$companyArr['id']?>/info"}'>{COMPANY}</button>
+<?php
+}
+if(!$userArr) {
+?>
+                        <button type="button" class="btn btn-dark ml-2 load-container" data-params='{"container":"dialogContainer","content":"dialogLogIn"}'>{LOG_IN}</button>
 <?php
 } else {
 ?>
-                        <button type="button" class="btn btn-dark send-data" data-params='{"action":"userLogOut","params":"{}"}'>{LOG_OUT}</button>
+                        <button type="button" class="btn btn-dark ml-2 send-data" data-params='{"action":"userLogOut","params":"{}"}'>{LOG_OUT}</button>
 <?php
 }
 ?>
