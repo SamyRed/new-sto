@@ -1,7 +1,7 @@
 AddDefaultCharset utf-8
 
 RewriteEngine on
-RewriteBase /
+RewriteBase samyred.github.io/new-sto/
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
