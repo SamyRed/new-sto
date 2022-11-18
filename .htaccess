@@ -1,9 +1,0 @@
-AddDefaultCharset utf-8
-
-RewriteEngine on
-RewriteBase samyred.github.io/new-sto/
-
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-
-RewriteRule ^(.*)$ index.php
