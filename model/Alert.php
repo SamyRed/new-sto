@@ -24,16 +24,14 @@ class Alert {
     }
     
     public static function get() {
+            
+        $alertList = array();
         
         if(!empty($_SESSION['alert'])) {
         
             $alertList = $_SESSION['alert'];
             $_SESSION['alert'] = array();
         
-        } else {
-            
-            $alertList = [];
-            
         }
         
         return $alertList;

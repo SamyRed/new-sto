@@ -11,8 +11,14 @@ $order = new Order();
             <form action="#">
                 <div class="modal-body">
                     <div class="input-group mb-3">
-                        <label for="title" class="input-group-text">{TITLE}:</label>
-                        <input type="text" class="form-control" name="title" id="title" placeholder="{TITLE}">
+                        <label for="companyAddTitle" class="input-group-text">{TITLE}:</label>
+                        <input type="text" class="form-control" name="title" id="companyAddTitle" placeholder="{TITLE}">
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <label for="companyAddHeadPositionTitle" class="input-group-text">{HEAD_POSITION_TITLE}:</label>
+                        <input type="text" class="form-control" name="position_title" id="companyAddHeadPositionTitle" placeholder="{TITLE}">
                     </div>
                 </div>
                 <div class="modal-footer">

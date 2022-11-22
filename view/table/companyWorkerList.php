@@ -6,7 +6,7 @@ $workerListArr = $worker->getList();
     <thead>
         <tr>
             <th scope="col">{E-MAIL}</th>
-            <th scope="col">{TITLE}</th>
+            <th scope="col">{NAME}</th>
             <th scope="col">{POSITION}</th>
             <th scope="col">{DATE}</th>
         </tr>

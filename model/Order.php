@@ -137,8 +137,11 @@ class Order {
 
                     $db = DB::getConnection();
 
-                    $result = $db->prepare("SELECT * FROM _order "
-                            . "WHERE company_id = :company_id");
+                    $result = $db->prepare("SELECT o.*, SUM(t.price) as sum "
+                        . "FROM _order_task_list as t "
+                        . "INNER JOIN _order as o "
+                        . "WHERE o.company_id = :company_id AND t.order_id = o.id "
+                        . "GROUP BY t.order_id");
                     $result->execute(array(
                         ':company_id' => $companyArr['id']
                     ));
@@ -179,7 +182,7 @@ class Order {
         $company = new Company();
         $worker = new Worker();
         
-        if($worker->havePermission('add_order')) {
+        if($worker->havePermission('add_company_order')) {
 
             if($companyArr = $company->get()) {
 
@@ -478,7 +481,7 @@ class Order {
 
                         ));
 
-                        $alertList->push('success', '{TASK_ADDED_TO_ORDER} <b>' . $orderArr['car_name'] . '</b> {WHITH_PRICE}' . $formData['price'] . ', {WHITH_AMOUNT} <b>' . $formData['amount']);
+                        $alertList->push('success', '{TASK_ADDED_TO_ORDER} <b>' . $orderArr['car_name'] . '</b> {WHITH_PRICE} <b>' . $formData['price'] . '</b>, {WHITH_AMOUNT} <b>' . $formData['amount']);
 
                     } catch(PDOException $e) {
 

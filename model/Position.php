@@ -63,7 +63,7 @@ Class Position {
         $company = new Company();
         $worker = new Worker();
         
-        if($worker->havePermission('company_control')) {
+        if($worker->havePermission('add_company_position')) {
             
             if($companyArr = $company->get()) {
             
@@ -95,30 +95,26 @@ Class Position {
                     $permissionListArr = $this->getDefaultPerlissionList();
 
                     foreach($permissionListArr as $permissionArr) {
-
-                        if(!empty($formData['permissionList'][$permissionArr['id']])) {
                             
-                            if(in_array($permissionArr['id'], $formData['permissionList'])) {
-                                
-                                $permissionValue = 1;
-                                
-                            } else {
-                                
-                                $permissionValue = 0;
-                                
-                            }
+                        if(in_array($permissionArr['id'], $formData['permissionList'])) {
 
-                            $result = $db->prepare("INSERT INTO _permission_list "
-                                    . "VALUES(NULL, :permissionId, :positionId, :value)");
-                            $result->execute(array(
+                            $permissionArr['value'] = 1;
 
-                                ':permissionId' => $permissionArr['id'],
-                                ':positionId' => $positionId,
-                                ':value' => $permissionValue
+                        } else {
 
-                            ));
+                            $permissionArr['value'] = 0;
 
                         }
+
+                        $result = $db->prepare("INSERT INTO _permission_list "
+                                . "VALUES(NULL, :permissionId, :positionId, :value)");
+                        $result->execute(array(
+
+                            ':permissionId' => $permissionArr['id'],
+                            ':positionId' => $positionId,
+                            ':value' => $permissionArr['value']
+
+                        ));
 
                     }
                     
@@ -205,6 +201,96 @@ Class Position {
             
         }
     
+        return $return;
+        
+    }
+    
+    public function edit($params) {
+        
+        $alertList = new Alert();
+        $return = array();
+        $formData = $params['formData'];
+        
+        $worker = new Worker();
+        
+        if(!$worker->havePermission('edit_company_position')) {
+            
+            try {
+                
+                $db = DB::getConnection();
+                $result = $db->prepare("UPDATE _position SET title = :title WHERE id = :positionId");
+                $result->execute(array(
+                    
+                    ':title' => $formData['title'],
+                    ':positionId' => $formData['positionId']
+                    
+                ));
+                
+                $permissionListArr = $this->getDefaultPerlissionList();
+
+                foreach($permissionListArr as $permissionArr) {
+
+                    if(in_array($permissionArr['id'], $formData['permissionList'])) {
+
+                        $permissionArr['value'] = 1;
+
+                    } else {
+
+                        $permissionArr['value'] = 0;
+
+                    }
+
+                    $result = $db->prepare("SELECT * FROM _permission_list WHERE position_id = :positionId AND permission_id = :permissionId");
+                    $result->execute(array(
+
+                        ':positionId' => $formData['positionId'],
+                        ':permissionId' => $permissionArr['id']
+
+                    ));
+                    
+                    if($result->rowCount() > 0) {
+                        
+                        $result = $db->prepare("UPDATE _permission_list "
+                                . "SET value = :value "
+                                . "WHERE position_id = :positionId AND permission_id = :permissionId");
+                        $result->execute(array(
+                            
+                            ':value' => $permissionArr['value'],
+                            ':positionId' => $formData['positionId'],
+                            ':permissionId' => $permissionArr['id']
+                            
+                        ));
+                        
+                    } else {
+                        
+                        $result = $db->prepare("INSERT INTO _permission_list "
+                                . "VALUES(NULL, :permissionId, :positionId, :value)");
+                        $result->execute(array(
+                            
+                            ':value' => $permissionArr['value'],
+                            ':positionId' => $formData['positionId'],
+                            ':permissionId' => $permissionArr['id']
+                            
+                        ));
+                        
+                    }
+
+                }
+                
+                $alertList->push('success', '{POSITION} <b>' . $formData['title'] . '</b> {UPDATED}!');
+                
+            } catch(PDOException $e) {
+                
+                $alertList->push('danger', '<b>PDO Error!</b> ' . htmlspecialchars($e));
+                
+            }
+            
+        } else {
+            
+            $alertList->push('danger', '{HAVE_NOT_ACCESS}');
+            
+        }
+        
         return $return;
         
     }

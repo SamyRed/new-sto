@@ -1,13 +1,25 @@
 <?php
 $order = new Order();
 if($orderListArr = $order::getList()) {
+$fieldList = $order->getFields();
 ?>
     <table class="table">
         <thead>
             <tr>
 <?php
-if($order->getFields()) {
-    foreach($order->getFields() as $field) {
+if($fieldList) {
+    
+    $i = 0;
+    
+    foreach($fieldList as $field) {
+        
+        if($i === 1) {
+?>
+                <th scope="col">{SUM_FOR_WORK}</th>    
+<?php
+        }
+        
+        $i++;
 ?>
                 <th scope="col"><?=$field['field_name']?></th>
 <?php
@@ -22,7 +34,17 @@ if($order->getFields()) {
 ?>
             <tr>
 <?php
-        foreach($order->getFields() as $field) {
+        $i = 0;
+        
+        foreach($fieldList as $field) {
+        
+        if($i === 1) {
+?>
+                <td><a href="/order/<?=$orderItem['id']?>/material-list"><?=$orderItem['sum']?></a></td>
+<?php
+        }
+        
+        $i++;
 ?>
                 <td><a href="/order/<?=$orderItem['id']?>/material-list"><?=$orderContent[$field['service_field_name']]?></a></td>
 <?php

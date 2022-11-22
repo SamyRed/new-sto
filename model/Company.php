@@ -144,17 +144,20 @@ class Company {
     
     public function add($params) {
         
-        $return = array();
         $alertList = new Alert();
+        $return = array();
+        $formData = $params['formData'];
+        
         $user = new User();
         $company = new Company();
-        $formData = $params['formData'];
+        $position = new Position();
         
         if($userArr = $user->get()) {
         
             try {
 
                 $db = DB::getConnection();
+                
                 $result = $db->prepare("INSERT INTO _company VALUES(NULL, NOW(), :title, :userId, '{}')");
                 $result->execute(array(
 
@@ -163,6 +166,43 @@ class Company {
 
                 ));
                 
+                    
+                $companyId = $db->lastInsertId();
+
+                $result = $db->prepare("INSERT INTO _position "
+                        . "VALUES(NULL, NOW(), :companyId, :title)");
+                $result->execute(array(
+
+                    ':companyId' => $companyId,
+                    ':title' => $formData['position_title']
+
+                ));
+                
+                $defaultPermissionListArr = $position->getDefaultPerlissionList();
+                $positionId = $db->lastInsertId();
+
+                foreach($defaultPermissionListArr as $permissionArr) {
+
+                    $result = $db->prepare("INSERT INTO _permission_list "
+                            . "VALUES(NULL, :permissionId, :positionId, 1)");
+                    $result->execute(array(
+
+                        ':permissionId' => $permissionArr['id'],
+                        ':positionId' => $positionId
+
+                    ));
+
+                }
+
+                $result = $db->prepare("INSERT INTO _worker VALUES(NULL, NOW(), :userId, :positionId, :companyId)");
+                $result->execute(array(
+
+                    ':userId' => $userArr['id'],
+                    ':positionId' => $positionId,
+                    ':companyId' => $companyId
+
+                ));
+                    
                 $alertList->push('success', '{COMPANY} <b>' . $formData['title'] . '</b> {CREATED}');
                 $company->set($db->lastInsertId());
                 $return['reload'] = true;
@@ -179,7 +219,7 @@ class Company {
             
         }
         
-        return json_encode($return);
+        return $return;
         
     }
     

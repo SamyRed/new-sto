@@ -2,6 +2,8 @@
 return array(
     'ajax' => 'ajax/makeAjax',
     'route' => 'route/makeRoute',
+    'report/salary' => 'company/report/salary',
+    'report/storage' => 'company/report/storage',
     'storage' => 'storage/view',
     'storage/([0-9]+)' => 'storage/view/$1',
     'order/list' => 'order/list',

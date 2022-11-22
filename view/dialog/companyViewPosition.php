@@ -12,6 +12,7 @@ $permissionListArr = $positionArr['permission_list'];
             </div>
             <form action="#">
                 <div class="modal-body">
+                    <input type="hidden" name="positionId" value="<?=$params['positionId']?>">
                     <div class="input-group mb-3 ui-widget">
                         <label for="companyAddPositionTitle" class="input-group-text">{POSITION}:</label>
                         <input type="text" class="form-control" name="title" id="companyAddPositionTitle" value="<?=$positionArr['title']?>" placeholder="{POSITION_TITLE}">
@@ -47,8 +48,9 @@ if($permissionListArr) {
                         </div>
                 </div>
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger send-form load-container" data-params='{"action": "positionDelete", "data": {"positionId": <?=$positionArr['id']?>}, "container": "positionListContainer", "content":"tableCompanyPositionList"}' name="save">{DELETE}</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{CLOSE}</button>
-                    <button type="button" class="btn btn-outline-secondary send-form load-container" data-params='{"action": "positionAdd", "container": "positionListContainer", "content":"tableCompanyPositionList"}' name="save">{SAVE}</button>
+                    <button type="button" class="btn btn-outline-secondary send-form load-container" data-params='{"action": "positionEdit", "container": "positionListContainer", "content":"tableCompanyPositionList"}' name="save">{SAVE}</button>
                 </div>
             </form>
         </div>

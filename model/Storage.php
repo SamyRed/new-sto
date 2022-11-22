@@ -13,41 +13,16 @@ class Storage {
     public function get(int $id = null) {
         
         $alertList = new Alert();
-        $return = null;
+        $return = array();
         
         $company = new Company();
         $worker = new Worker();
+
+        if($companyArr = $company->get()) {
         
-        if($worker->havePermission('view_storage')) {
-        
-            if($id !== null) {
+            if($worker->havePermission('view_storage')) {
 
-                try {
-
-                    $db = DB::getConnection();
-                    $result = $db->prepare("SELECT * FROM _storage WHERE id = :id");
-                    $result->execute(array(
-
-                        ':id' => $id
-
-                    ));
-
-                    if($result->rowCount() > 0) {
-
-                        $storageArr = $result->fetch(PDO::FETCH_ASSOC);
-                        $return = $storageArr;
-
-                    }
-
-                } catch(PDOException $e) {
-
-                    $alertList->push('danger', '<b>PDO Error!</b>' . htmlspecialchars($e));
-
-                }
-
-            } else {
-
-                if(!empty($_SESSION['storage_id'])) {
+                if($id !== null) {
 
                     try {
 
@@ -55,7 +30,7 @@ class Storage {
                         $result = $db->prepare("SELECT * FROM _storage WHERE id = :id");
                         $result->execute(array(
 
-                            ':id' => $_SESSION['storage_id']
+                            ':id' => $id
 
                         ));
 
@@ -74,7 +49,39 @@ class Storage {
 
                 } else {
 
-                    if($companyArr = $company->get()) {
+                    if(!empty($_SESSION['storage_id'])) {
+
+                        try {
+
+                            $db = DB::getConnection();
+                            $result = $db->prepare("SELECT * FROM _storage WHERE id = :id");
+                            $result->execute(array(
+
+                                ':id' => $_SESSION['storage_id']
+
+                            ));
+
+                            if($result->rowCount() > 0) {
+
+                                $storageArr = $result->fetch(PDO::FETCH_ASSOC);
+
+                            } else {
+                                
+                                $storageListArr = $this->permittedList();
+                                $storageArr = $storageListArr[0];
+                                $this->set($storageArr['id']);
+                                
+                            }
+                            
+                            $return = $storageArr;
+
+                        } catch(PDOException $e) {
+
+                            $alertList->push('danger', '<b>PDO Error!</b>' . htmlspecialchars($e));
+
+                        }
+
+                    } else {
 
                         try {
 
@@ -100,20 +107,20 @@ class Storage {
 
                         }
 
-                    } else {
-
-                        $alertList->push('danger', '{COMPANY_NOT_FOUND}');
-
                     }
 
                 }
 
+            } else {
+
+                $alertList->push('danger', 'HAVE_NOT_ACCESS');
+
             }
-            
+
         } else {
-            
-            $alertList->push('danger', 'HAVE_NOT_ACCESS');
-            
+
+            $alertList->push('warning', '{COMPANY_NOT_FOUND}');
+
         }
         
         return $return;
@@ -182,7 +189,7 @@ class Storage {
         $company = new Company();
         $worker = new Worker;
         
-        if($worker->havePermission('add_storage')) {
+        if($worker->havePermission('add_company_storage')) {
 
             if($companyArr = $company->get()) {
 
@@ -234,7 +241,7 @@ class Storage {
 
                 } else {
 
-                    $alertList->push('caution', '{WORKER_NOT_FOUND}');
+                    $alertList->push('warning', '{WORKER_NOT_FOUND}');
 
                 }
 
@@ -334,16 +341,26 @@ class Storage {
         
     }
     
-    public function getMaterialList() {
+    public function getMaterialList(int $id = null) {
         
         $alertList = new Alert();
         $return = array();
         
         $worker = new Worker();
         
+        if($id !== null) {
+            
+            $storageArr = $this->get($id);
+            
+        } else {
+            
+            $storageArr = $this->get();
+            
+        }
+        
         if($worker->havePermission('view_storage')) {
         
-            if($storageArr = $this->get()) {
+            if($storageArr) {
 
                 try {
 

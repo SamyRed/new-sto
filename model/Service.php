@@ -31,4 +31,10 @@ class Service {
         
     }
     
+    public static function addAction($type, $text, $companyId, $workerId, $orderId = null, $storageId = null) {
+        
+        
+        
+    }
+    
 }

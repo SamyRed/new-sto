@@ -6,12 +6,6 @@ class User {
     
     public function __construct() {
         
-        if(!empty($_SESSION['user_id'])) {
-                
-            $this->id = $_SESSION['user_id'];
-
-        }
-        
     }
     
     public function get(int $id = null) {
@@ -171,12 +165,11 @@ class User {
         
         $return = array();
         
-        $this->id = null;
         unset($_SESSION['user_id']);
         
         $return['reload'] = true;
         
-        return json_encode($return);
+        return $return;
         
     }
     

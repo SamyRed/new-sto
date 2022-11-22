@@ -195,7 +195,7 @@ class Worker {
                                 . "INNER JOIN _worker AS w  "
                                 . "INNER JOIN _user AS u  "
                                 . "WHERE u.id = w.user_id AND t.order_id = o.id AND t.worker_id = w.id AND o.company_id = :companyId "
-                                . "ORDER BY w.id, o.id, t.id");
+                                . "ORDER BY o.id");
                         $result->execute(array(
 
                             ':companyId' => $companyArr['id']
@@ -209,10 +209,10 @@ class Worker {
 
                             foreach($salaryListArr as $item) {
                                 
-                                $sortedSalaryListArr[$item['worker_id']][$item['order_id']][$item['task_id']]['title'] = $item['title'];
-                                $sortedSalaryListArr[$item['worker_id']][$item['order_id']][$item['task_id']]['amount'] = $item['amount'];
-                                $sortedSalaryListArr[$item['worker_id']][$item['order_id']][$item['task_id']]['price'] = $item['price'];
-                                $sortedSalaryListArr[$item['worker_id']][$item['order_id']][$item['task_id']]['sum'] = $item['sum'];
+                                $sortedSalaryListArr[$item['worker_id']][$item['order_id']][$item['task_id']] = $item;
+                                unset($sortedSalaryListArr[$item['worker_id']][$item['order_id']]['task_id']);
+                                unset($sortedSalaryListArr[$item['worker_id']][$item['order_id']]['worker_id']);
+                                unset($sortedSalaryListArr[$item['worker_id']][$item['order_id']]['order_id']);
                                     
                             }
                             
@@ -328,7 +328,6 @@ class Worker {
             
         }
         
-        var_dump($return);
         return $return;
         
     }

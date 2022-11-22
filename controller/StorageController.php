@@ -11,28 +11,22 @@ class StorageController extends ServiceController {
         $user = new User();
         $storage = new Storage();
         $company = new Company();
-        
-        if(!empty($params[0])) {
-            
-            $storage->set($params[0]);
-            
-        }
-        
-        if($storageArr = $storage->get()) {
-        
-            Service::setTitle('Storage "' . $storageArr['title'] . '"');
-            $materialList = $storage->getMaterialList();
-            $permittedStorageList = $storage->permittedList();
-        
-        }
 
         include_once ROOT . '/view/header.php';
         
         if($user->get()) {
             
-            if($company->get()) {
+            if($companyArr = $company->get()) {
+        
+                if(!empty($params[0])) {
+
+                    $storage->set($params[0]);
+
+                }
+                
+                $permittedStorageList = $storage->permittedList();
             
-                include_once ROOT . '/view/storage/view.php';
+                    include_once ROOT . '/view/storage/view.php';
                 
             } else {
             

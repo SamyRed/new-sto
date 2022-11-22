@@ -91,8 +91,6 @@ $(function() {
             data: {'action': 'sendData', 'script': action, 'formData': params},
             success: function(result){
                 
-                alertShow(result['alert']);
-                
                 if(result.hasOwnProperty('reload')) {
         
                     var uri = window.location.pathname.substring(1);
@@ -122,6 +120,8 @@ $(function() {
                     });
     
                 }
+                
+                alertShow(result['alert']);
                 
                 if (typeof container !== 'undefined') {
                 
@@ -276,8 +276,6 @@ $(function() {
             data: {'action': 'sendData', 'script': script, 'params': params},
             success: function(result){
                 
-                alertShow(result['alert']);
-                
                 if(result.hasOwnProperty('reload')) {
         
                     var uri = window.location.pathname.substring(1);
@@ -307,6 +305,8 @@ $(function() {
                     });
                     
                 }
+                
+                alertShow(result['alert']);
                 
             },
             error: function(result){
