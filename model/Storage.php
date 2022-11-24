@@ -10,7 +10,7 @@ class Storage {
         
     }
     
-    public function get(int $id = null) {
+    public function get($id = null) {
         
         $alertList = new Alert();
         $return = array();
@@ -145,7 +145,7 @@ class Storage {
         
     }
     
-    public function set(int $id) {
+    public function set($id) {
         
         $alertList = new Alert();
         $return = array();
@@ -341,7 +341,7 @@ class Storage {
         
     }
     
-    public function getMaterialList(int $id = null) {
+    public function getMaterialList($id = null) {
         
         $alertList = new Alert();
         $return = array();

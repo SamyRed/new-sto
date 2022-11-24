@@ -11,7 +11,7 @@ class Alert {
         
     }
     
-    public static function empty() {
+    public static function isEmpty() {
         if(empty($_SESSION['alert'])) {
             
             return true;
@@ -40,7 +40,7 @@ class Alert {
     
     public static function show() {
         
-        if(!self::empty()) {
+        if(!self::isEmpty()) {
             
             $alertList = $_SESSION['alert'];
             $_SESSION['alert'] = array();

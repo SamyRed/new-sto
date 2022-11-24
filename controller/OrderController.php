@@ -53,7 +53,7 @@ $('#dialogLogIn').modal('show');
         $user = new User();
         $company = new Company();
         $order = new Order();
-        $order->set($params[1]);
+        $order->set((int)$params[1]);
         $orderArr = $order->get();
         
         include_once ROOT . '/view/header.php';

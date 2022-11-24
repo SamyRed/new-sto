@@ -8,7 +8,7 @@ class Worker {
         
     }
     
-    public function get(int $id = null) {
+    public function get($id = null) {
         
         $alertList = new Alert();
         $return = array();

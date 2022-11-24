@@ -68,7 +68,7 @@ class CompanyController extends ServiceController {
 
                 }
             
-                $subPage = $params[0];
+                $subPage = ucfirst($params[0]);
                 include_once ROOT . '/view/company/report.php';
 
             } else {

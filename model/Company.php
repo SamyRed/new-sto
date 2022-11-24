@@ -10,7 +10,7 @@ class Company {
         
     }
     
-    public function get(int $id = null) {
+    public function get($id = null) {
         
         $alertList = new Alert();
         $user = new User();
@@ -108,7 +108,7 @@ class Company {
         
     }
     
-    public function set(int $id) {
+    public function set($id) {
         
         try {
             

@@ -8,7 +8,7 @@ class Order {
         
     }
     
-    public function get(int $id = null) {
+    public function get($id = null) {
         
         $alertList = new Alert();
         $return = null;
@@ -69,7 +69,7 @@ class Order {
         
     }
     
-    public function set(int $id) {
+    public function set($id) {
         
         $_SESSION['order_id'] = $id;
         
@@ -409,7 +409,7 @@ class Order {
 
                                 }
 
-                            } catch(PDOException) {
+                            } catch(PDOException $e) {
 
                                 $alertList->push('danger', '<b>DB Error!</b> ' . htmlspecialchars($e));
 

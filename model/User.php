@@ -8,7 +8,10 @@ class User {
         
     }
     
-    public function get(int $id = null) {
+    public function get($id = null) {
+        
+        $alertList = new Alert();
+        $return = false;
         
         if($id !== null) {
             
@@ -61,7 +64,7 @@ class User {
         
     }
     
-    public function set(int $id) {
+    public function set($id) {
         
         try {
             
@@ -137,8 +140,8 @@ class User {
                     }
                     
                     if (password_verify($password, $userArr['password_hash'])) {
-                        
-                        $user->set($userArr['id']);
+                        var_dump((int)$userArr['id']);
+                        $user->set((int)$userArr['id']);
                         
                         $return['reload'] = true;
                         
