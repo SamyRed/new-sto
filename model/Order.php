@@ -137,10 +137,11 @@ class Order {
 
                     $db = DB::getConnection();
 
-                    $result = $db->prepare("SELECT o.*, SUM(t.price) as sum "
+                    $result = $db->prepare("SELECT o.*, SUM(t.price) as sum, s.title as status_title "
                         . "FROM _order_task_list as t "
                         . "INNER JOIN _order as o "
-                        . "WHERE o.company_id = :company_id AND t.order_id = o.id "
+                        . "INNER JOIN _order_status_list as s "
+                        . "WHERE o.company_id = :company_id AND t.order_id = o.id AND s.id = o.status_id "
                         . "GROUP BY t.order_id");
                     $result->execute(array(
                         ':company_id' => $companyArr['id']
@@ -211,7 +212,7 @@ class Order {
                         $db = DB::getConnection();
 
                         $result = $db->prepare("INSERT INTO _order "
-                                . "VALUES(NULL, NOW(), :params, :company_id)");
+                                . "VALUES(NULL, NOW(), :params, :company_id, 1)");
                         $result->execute(array(
 
                             ':params' => $paramsJSON,
@@ -639,6 +640,133 @@ class Order {
 
         }
         
+        return $return;
+        
+    }
+    
+    public function getStatus($id = null) {
+        
+        $alertList = new Alert();
+        $return = array();
+        
+        if($id = null) {
+            
+            $orderArr = $this->get();
+            
+        } else {
+            
+            $orderArr = $this->get($id);
+            
+        }
+        
+        try {
+            
+            $db = DB::getConnection();
+            $result = $db->prepare("SELECT * FROM _order_status_list WHERE id = :orderId");
+            $result->execute(array(
+                
+                ':orderId' => $orderArr['id']
+                
+            ));
+            
+            if($result->rowCount()) {
+                
+                $orderArr = $result->fetch(PDO::FETCH_ASSOC);
+                $return = $orderArr;
+                
+            }
+    
+        } catch (PDOException $e) {
+
+            $alertList->push('danger', '<b>PDO Error!</b> ' . htmlspecialchars($e));
+        }
+        
+        return $return;
+        
+    }
+    
+    public function getStatusList() {
+
+        $alertList = new Alert();
+        $return = array();
+        
+        try {
+                    
+            $db = DB::getConnection();
+            $result = $db->query("SELECT * FROM _order_status_list");
+            
+            if($result->rowCount() > 0) {
+                
+                $statusListArr = $result->fetchAll(PDO::FETCH_ASSOC);
+                $return = $statusListArr;
+                
+            }
+    
+        } catch (PDOException $e) {
+
+            $alertList->push('danger', '<b>PDO Error!</b> ' . htmlspecialchars($e));
+        }
+        
+        return $return;
+            
+    }
+    
+    public function setStatus($params) {
+        
+        $alertList = new Alert();
+        $return = array();
+        
+        $company = new Company();
+        $worker = new Worker();
+        
+        if($companyArr = $company->get()) {
+            
+            if($workerArr = $worker->get()) {
+                
+                if($orderArr = $this->get($params['order_id'])) {
+                
+                    if($statusArr = $this->getStatus($params['status_id'])) {
+
+                        try {
+
+                            $db = DB::getConnection();
+                            $result = $db->prepare("UPDATE _order SET status_id = :statusId WHERE id = :orderId");
+                            $result->execute(array(
+
+                                ':statusId' => $params['status_id'],
+                                ':orderId' => $params['order_id']
+
+                            ));
+
+                            $alertList->push('success', '{STATUS CHANGED AT <b>' . $statusArr['title'] . '</b> {IN_ORDER} <b>' . $orderArr['car_name'] . '[' . $orderArr['car_number'] . ']</b>');
+                            Service::addAction('change_status', '{STATUS CHANGED AT} <b>' . $statusArr['title'] . '</b> {IN_ORDER} <b>' . $orderArr['car_name'] . '[' . $orderArr['car_number'] . ']</b>', $companyArr['id'], $workerArr['id']);
+
+                        } catch (PDOException $e) {
+
+                            $alertList->push('danger', '<b>PDO Error!</b> ' . htmlspecialchars($e));
+
+                        }
+
+                    } else {
+
+                        $alertList->push('danger', '{STATUS_NOT_FOUND}');
+
+                    }
+                    
+                }
+                
+            } else {
+                
+                $alertList->push('danger', '{WORKER_NOT_FOUND}');
+                
+            }
+            
+        } else {
+                
+            $alertList->push('danger', '{COMPANY_NOT_FOUND}');
+
+        }
+
         return $return;
         
     }

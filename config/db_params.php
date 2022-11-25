@@ -1,7 +1,7 @@
 <?php
 
 return array(
-    'host' => 'localhost',
+    'host' => 'golf.cityhost.com.ua',
     'dbname' => 'chb751b6cf_fastserv',
     'user' => 'chb751b6cf_SamyRed',
     'password' => 'Nq63qjOlnh'

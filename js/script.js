@@ -268,6 +268,8 @@ $(function() {
         var script = dataParams.action;
         var params = dataParams.params;
         
+        console.log(params);
+        
         $.ajax({
             
             url: '/ajax',
@@ -351,4 +353,59 @@ $(function() {
     $(document).on("click", ".access-rule-delete", (function() {
         $(this).parent().parent().remove();
     }));
+});
+
+$(function() {
+   $(document).on("change", "#orderSetStatus", (function() {
+        
+        var params = $(this).data('params');
+        Object.assign(params, {"status_id":$(this).val()})
+        
+        console.log(params);
+        
+        $.ajax({
+            
+            url: '/ajax',
+            method: 'post',
+            dataType: 'json',
+            data: {'action': 'sendData', 'script': 'orderSetStatus', 'params': params},
+            success: function(result){
+                
+                if(result.hasOwnProperty('reload')) {
+        
+                    var uri = window.location.pathname.substring(1);
+        
+                    $.ajax({
+
+                        url: '/route',
+                        method: 'post',
+                        dataType: 'json',
+                        data: {'action': 'route', 'uri': uri},
+                        success: function(result){
+
+                            alertShow(result['alert']);
+
+                        },
+                        error: function(result){
+
+                            console.log(JSON.stringify(result));
+
+                        }
+
+                    });
+                    
+                }
+                
+                alertShow(result['alert']);
+                
+            },
+            error: function(result){
+                
+                console.log(JSON.stringify(result));
+                
+            }
+            
+        });
+        
+   })); 
 });

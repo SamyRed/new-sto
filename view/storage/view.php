@@ -2,10 +2,7 @@
 $storage = new Storage();
 $storageArr = $storage->get();
 $permittedStorageList = $storage->permittedList();
-if($storageArr) {
-?>
-    <h4><?=$storageArr['title']?></h4>
-<?php   
+if($storageArr) {  
 }
 ?>
 <nav class="navbar navbar-expand-lg bg-light">

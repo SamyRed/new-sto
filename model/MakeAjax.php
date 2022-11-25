@@ -11,7 +11,6 @@ class MakeAjax {
             
             $params = $params['params'];
         
-            
         }
         
         $folder = array_shift($tags);

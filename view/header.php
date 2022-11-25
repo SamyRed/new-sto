@@ -76,4 +76,4 @@ if(!$userArr) {
             </div>
         </nav>
         <div id="dialogContainer"></div>
-        <main class="container card mt-2" id="warpper">
+        <main class="container card mt-2 mb-2" id="warpper">
